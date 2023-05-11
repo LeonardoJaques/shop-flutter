@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_flutter/utils/app_route.dart';
 
 import '../models/products.dart';
 
@@ -9,8 +10,8 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: GridTile(
+        borderRadius: BorderRadius.circular(10),
+        child: GridTile(
           footer: GridTileBar(
             backgroundColor: Colors.black87,
             leading: IconButton(
@@ -32,11 +33,19 @@ class ProductItem extends StatelessWidget {
               ),
             ),
           ),
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
-            // , fit: BoxFit.cover,
-          )),
-    );
+          child: GestureDetector(
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
+              // , fit: BoxFit.cover,
+            ),
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                AppRoutes.PRODUCT_DETAIL,
+                arguments: product,
+              );
+            },
+          ),
+        ));
   }
 }
