@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           colorScheme:
               ColorScheme.fromSwatch().copyWith(secondary: Colors.deepOrange),
         ),
-        home: ProductsOverViewPage(),
+        home: const ProductsOverViewPage(),
         debugShowCheckedModeBanner: false,
         routes: {
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailPage(),
