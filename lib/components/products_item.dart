@@ -31,7 +31,7 @@ class ProductItem extends StatelessWidget {
               ),
             ),
             title: Text(
-              product.title,
+              product.name,
               style: const TextStyle(fontSize: 12),
               textAlign: TextAlign.center,
             ),

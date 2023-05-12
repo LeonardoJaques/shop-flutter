@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shop_flutter/components/product_grid.dart';
 
 enum FilterOptions {
-  Favorites,
-  All,
+  favorites,
+  all,
 }
 
 class ProductsOverViewPage extends StatefulWidget {
@@ -26,17 +26,17 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
             icon: const Icon(Icons.more_vert),
             itemBuilder: (ctx) => [
               const PopupMenuItem(
-                value: FilterOptions.Favorites,
+                value: FilterOptions.favorites,
                 child: Text('Somente Favoritos'),
               ),
               const PopupMenuItem(
-                value: FilterOptions.All,
+                value: FilterOptions.all,
                 child: Text('Todos'),
               ),
             ],
             onSelected: (FilterOptions selectedValue) {
               setState(() {
-                if (selectedValue == FilterOptions.Favorites) {
+                if (selectedValue == FilterOptions.favorites) {
                   _showFavoriteOnly = true;
                 } else {
                   _showFavoriteOnly = false;
