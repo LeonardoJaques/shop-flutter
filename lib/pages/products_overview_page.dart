@@ -51,7 +51,7 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
           ),
           Consumer<Cart>(
             child: IconButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pushNamed('/cart'),
               icon: const Icon(Icons.shopping_cart),
             ),
             builder: (ctx, cart, child) => Bagdee(
