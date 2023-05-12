@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailPage(),
-          AppRoutes.CART: (context) => const CartPage(),
+          AppRoutes.CART: (context) => CartPage(),
         },
       ),
     );
