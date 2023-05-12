@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_flutter/components/badgee.dart';
 import 'package:shop_flutter/components/product_grid.dart';
+
+import '../models/cart.dart';
 
 enum FilterOptions {
   favorites,
@@ -21,6 +25,7 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Minha Loja'),
+        backgroundColor: Colors.purple,
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
@@ -43,7 +48,17 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
                 }
               });
             },
-          )
+          ),
+          Consumer<Cart>(
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.shopping_cart),
+            ),
+            builder: (ctx, cart, child) => Bagdee(
+              value: cart.itemsCount.toString(),
+              child: child!,
+            ),
+          ),
         ],
       ),
       body: ProductGrid(_showFavoriteOnly),
