@@ -11,6 +11,7 @@ class AppDrawer extends StatelessWidget {
         children: [
           AppBar(
             title: const Text('Bem vindo Usuário!'),
+            backgroundColor: Theme.of(context).colorScheme.primary,
             automaticallyImplyLeading: false,
           ),
           const Divider(),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shop_flutter/components/app_drawer.dart';
 import 'package:shop_flutter/components/products_item.dart';
 import 'package:shop_flutter/models/product_list.dart';
+import 'package:shop_flutter/utils/app_route.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
@@ -16,7 +17,9 @@ class ProductsPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.PRODUCTS_FORM);
+            },
           ),
         ],
       ),

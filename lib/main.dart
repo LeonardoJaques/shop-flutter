@@ -5,6 +5,7 @@ import 'package:shop_flutter/models/order_list.dart';
 import 'package:shop_flutter/models/product_list.dart';
 import 'package:shop_flutter/pages/cart_page.dart';
 import 'package:shop_flutter/pages/orders_page.dart';
+import 'package:shop_flutter/pages/product_form_page.dart';
 import 'package:shop_flutter/pages/products_detail_page.dart';
 import 'package:shop_flutter/pages/products_overview_page.dart';
 import 'package:shop_flutter/pages/products_page.dart';
@@ -34,15 +35,18 @@ class MyApp extends StatelessWidget {
         title: 'Flutter shop',
         theme: ThemeData(
           fontFamily: 'Lato',
-          primarySwatch: Colors.purple,
-          colorScheme:
-              ColorScheme.fromSwatch().copyWith(secondary: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            secondary: Colors.deepOrange,
+            primary: Colors.purple,
+            error: Colors.red,
+          ),
         ),
         debugShowCheckedModeBanner: false,
         routes: {
           AppRoutes.HOME: (context) => const ProductsOverViewPage(),
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailPage(),
           AppRoutes.PRODUCTS: (context) => const ProductsPage(),
+          AppRoutes.PRODUCTS_FORM: (context) => const ProductFormPage(),
           AppRoutes.CART: (context) => const CartPage(),
           AppRoutes.ORDERS: (context) => const OrdersPage(),
         },
