@@ -33,7 +33,6 @@ class Cart with ChangeNotifier {
         () => CartItem(
           id: DateTime.now().toString(),
           productId: Random().nextDouble().toString(),
-          // productId: productId,
           name: name,
           quantity: 1,
           price: price,
@@ -44,7 +43,28 @@ class Cart with ChangeNotifier {
   }
 
   void removeItem(String productId) {
-    _items.remove(productId);
+    _items.removeWhere((key, value) => value.productId == productId);
+    notifyListeners();
+  }
+
+  void removeSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId]?.quantity == 1) {
+      _items.remove(productId);
+    } else {
+      _items.update(
+        productId,
+        (existingItem) => CartItem(
+          id: existingItem.id,
+          productId: productId,
+          name: existingItem.name,
+          quantity: existingItem.quantity - 1,
+          price: existingItem.price,
+        ),
+      );
+    }
     notifyListeners();
   }
 

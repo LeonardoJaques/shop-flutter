@@ -5,7 +5,7 @@ import 'package:shop_flutter/models/cart.dart';
 import 'package:shop_flutter/models/order_list.dart';
 
 class CartPage extends StatelessWidget {
-  CartPage({super.key});
+  const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
