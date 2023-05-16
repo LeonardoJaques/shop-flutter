@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_flutter/data/dummy_data.dart';
+import 'package:shop_flutter/models/environment.dart';
 import 'package:shop_flutter/models/products.dart';
 
 class ProductList with ChangeNotifier {
   final List<Product> _items = DUMMY_PRODUCTS;
-  final baseURL = dotenv.env['FIREBASE_URL'] ?? 'FIREBASE_URL not found';
+
+  final baseURL = Environment.FIREBASEAPI;
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
