@@ -1,8 +1,8 @@
 // ignore_for_file: unused_element
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_flutter/models/product_list.dart';
 import 'package:shop_flutter/models/products.dart';
 
 class ProductFormPage extends StatefulWidget {
@@ -23,6 +23,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _formData = <String, Object>{};
 
   void updateImage() => setState(() {});
+
   bool isValidImageUrl(String url) {
     bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
     bool endsWith = url.toLowerCase().endsWith('.png') ||
@@ -38,13 +39,25 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
 
     _formKey.currentState?.save();
-    final newProduct = Product(
-      id: Random().nextDouble().toString(),
-      name: _formData['name'] as String,
-      description: _formData['description'] as String,
-      price: _formData['price'] as double,
-      imageUrl: _formData['imageUrl'] as String,
-    );
+
+    Provider.of<ProductList>(context, listen: false).saveProduct(_formData);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_formData.isEmpty) {
+      final product = ModalRoute.of(context)?.settings.arguments as Product?;
+      if (product != null) {
+        _formData['id'] = product.id;
+        _formData['name'] = product.name;
+        _formData['description'] = product.description;
+        _formData['price'] = product.price;
+        _formData['imageUrl'] = product.imageUrl;
+        _imageURLController.text = product.imageUrl;
+      }
+    }
   }
 
   @override
@@ -83,6 +96,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
               child: ListView(
                 children: [
                   TextFormField(
+                    initialValue: _formData['name'] as String?,
                     decoration: const InputDecoration(labelText: 'Nome'),
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {
@@ -103,6 +117,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     },
                   ),
                   TextFormField(
+                      initialValue: _formData['price']?.toString() ?? '',
                       decoration: const InputDecoration(labelText: 'Preço'),
                       textInputAction: TextInputAction.next,
                       focusNode: _priceFocus,
@@ -113,8 +128,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       },
                       onSaved: (price) =>
                           _formData['price'] = double.parse(price ?? '0'),
-                      validator: (_price) {
-                        final priceString = _price?.trim() ?? '';
+                      validator: (priceValue) {
+                        final priceString = priceValue?.trim() ?? '';
                         final price = double.tryParse(priceString) ?? -1;
                         if (price <= 0) {
                           return 'Informe um preço válido';
@@ -122,6 +137,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                         return null;
                       }),
                   TextFormField(
+                    initialValue: _formData['description'] as String?,
                     decoration: const InputDecoration(labelText: 'Descrição'),
                     focusNode: _descriptionFocus,
                     keyboardType: TextInputType.multiline,
@@ -157,8 +173,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           onFieldSubmitted: (_) => _submitForm(),
                           onSaved: (imageUrl) =>
                               _formData['imageUrl'] = imageUrl ?? '',
-                          validator: (_imageUrl) {
-                            final imageUrl = _imageUrl?.trim() ?? '';
+                          validator: (imageUrlValue) {
+                            final imageUrl = imageUrlValue?.trim() ?? '';
                             return isValidImageUrl(imageUrl)
                                 ? null
                                 : 'Informe uma URL válida';
@@ -185,6 +201,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                 fit: BoxFit.cover,
                                 child: Image.network(
                                   _imageURLController.text,
+                                  height: 100,
+                                  width: 100,
                                 ),
                               ),
                       )
