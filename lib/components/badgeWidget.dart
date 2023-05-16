@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Bagdee extends StatelessWidget {
+class BadgeWidget extends StatelessWidget {
   final Widget child;
   final String value;
   final Color? color;
-  const Bagdee({
+  const BadgeWidget({
     super.key,
     required this.value,
     required this.child,

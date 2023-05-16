@@ -27,7 +27,9 @@ class ProductGrid extends StatelessWidget {
           mainAxisSpacing: 10),
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
         value: loadedProducts[i],
-        child: const ProductGridItem(),
+        // this const affects the performance of favorite button
+        // ignore: prefer_const_constructors
+        child: ProductGridItem(),
       ),
     );
   }

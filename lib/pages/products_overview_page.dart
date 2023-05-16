@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_flutter/components/app_drawer.dart';
-import 'package:shop_flutter/components/badgee.dart';
+import 'package:shop_flutter/components/badgeWidget.dart';
 import 'package:shop_flutter/components/product_grid.dart';
-
-import '../models/cart.dart';
+import 'package:shop_flutter/models/cart.dart';
+import 'package:shop_flutter/utils/app_route.dart';
 
 enum FilterOptions {
-  favorites,
+  favorite,
   all,
 }
 
-class ProductsOverViewPage extends StatefulWidget {
-  const ProductsOverViewPage({super.key});
+class ProductsOverviewPage extends StatefulWidget {
+  const ProductsOverviewPage({Key? key}) : super(key: key);
 
   @override
-  State<ProductsOverViewPage> createState() => _ProductsOverViewPageState();
+  State<ProductsOverviewPage> createState() => _ProductsOverviewPageState();
 }
 
-class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
+class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _showFavoriteOnly = false;
+
   @override
   Widget build(BuildContext context) {
-    // final provider = Provider.of<ProductList>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Minha Loja'),
-        backgroundColor: Colors.purple,
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
-            itemBuilder: (ctx) => [
+            itemBuilder: (_) => [
               const PopupMenuItem(
-                value: FilterOptions.favorites,
+                value: FilterOptions.favorite,
                 child: Text('Somente Favoritos'),
               ),
               const PopupMenuItem(
@@ -42,7 +41,7 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
             ],
             onSelected: (FilterOptions selectedValue) {
               setState(() {
-                if (selectedValue == FilterOptions.favorites) {
+                if (selectedValue == FilterOptions.favorite) {
                   _showFavoriteOnly = true;
                 } else {
                   _showFavoriteOnly = false;
@@ -52,10 +51,12 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
           ),
           Consumer<Cart>(
             child: IconButton(
-              onPressed: () => Navigator.of(context).pushNamed('/cart'),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.CART);
+              },
               icon: const Icon(Icons.shopping_cart),
             ),
-            builder: (ctx, cart, child) => Bagdee(
+            builder: (ctx, cart, child) => BadgeWidget(
               value: cart.itemsCount.toString(),
               child: child!,
             ),
@@ -63,7 +64,7 @@ class _ProductsOverViewPageState extends State<ProductsOverViewPage> {
         ],
       ),
       body: ProductGrid(_showFavoriteOnly),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
     );
   }
 }

@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          AppRoutes.HOME: (context) => const ProductsOverViewPage(),
+          AppRoutes.HOME: (context) => const ProductsOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailPage(),
           AppRoutes.PRODUCTS: (context) => const ProductsPage(),
           AppRoutes.PRODUCTS_FORM: (context) => const ProductFormPage(),
