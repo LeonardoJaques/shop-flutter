@@ -23,6 +23,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _formData = <String, Object>{};
 
   void updateImage() => setState(() {});
+  bool isValidImageUrl(String url) {
+    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool endsWith = url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg') ||
+        url.toLowerCase().endsWith('.jpeg');
+    return isValidUrl && endsWith;
+  }
 
   void _submitForm() {
     final isValid = _formKey.currentState?.validate() ?? false;
@@ -96,17 +103,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     },
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Preço'),
-                    textInputAction: TextInputAction.next,
-                    focusNode: _priceFocus,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(_descriptionFocus);
-                    },
-                    onSaved: (price) =>
-                        _formData['price'] = double.parse(price ?? '0'),
-                  ),
+                      decoration: const InputDecoration(labelText: 'Preço'),
+                      textInputAction: TextInputAction.next,
+                      focusNode: _priceFocus,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(_descriptionFocus);
+                      },
+                      onSaved: (price) =>
+                          _formData['price'] = double.parse(price ?? '0'),
+                      validator: (_price) {
+                        final priceString = _price?.trim() ?? '';
+                        final price = double.tryParse(priceString) ?? -1;
+                        if (price <= 0) {
+                          return 'Informe um preço válido';
+                        }
+                        return null;
+                      }),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Descrição'),
                     focusNode: _descriptionFocus,
@@ -114,6 +128,20 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     maxLines: 3,
                     onSaved: (description) =>
                         _formData['description'] = description ?? '',
+                    validator: (description) {
+                      final descriptionIsValid =
+                          description?.trim().isNotEmpty ?? false;
+                      final descriptionIsInvalid = !descriptionIsValid;
+
+                      if (descriptionIsInvalid) {
+                        return 'Informe uma descrição válido';
+                      }
+                      if (descriptionIsValid &&
+                          description!.trim().length < 10) {
+                        return 'Informe uma descrição com no mínimo 10 letras';
+                      }
+                      return null;
+                    },
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -129,6 +157,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           onFieldSubmitted: (_) => _submitForm(),
                           onSaved: (imageUrl) =>
                               _formData['imageUrl'] = imageUrl ?? '',
+                          validator: (_imageUrl) {
+                            final imageUrl = _imageUrl?.trim() ?? '';
+                            return isValidImageUrl(imageUrl)
+                                ? null
+                                : 'Informe uma URL válida';
+                          },
                         ),
                       ),
                       Container(
