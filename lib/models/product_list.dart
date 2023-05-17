@@ -3,12 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop_flutter/data/dummy_data.dart';
 import 'package:shop_flutter/models/environment.dart';
 import 'package:shop_flutter/models/products.dart';
 
 class ProductList with ChangeNotifier {
-  final List<Product> _items = DUMMY_PRODUCTS;
+  final List<Product> _items = [];
 
   final _url = '${Environment.FIREBASEAPI}/products.json';
 
@@ -19,8 +18,25 @@ class ProductList with ChangeNotifier {
   int get itemsCount => _items.length;
 
   Future<void> loadProducts() async {
+    _items.clear();
     final response = await http.get(Uri.parse(_url));
-    print(jsonDecode(response.body));
+    if (response.body == 'null') {
+      return;
+    }
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((productId, productsData) {
+      _items.add(
+        Product(
+          id: productId,
+          name: productsData['name'],
+          description: productsData['description'],
+          price: productsData['price'],
+          imageUrl: productsData['imageUrl'],
+          isFavorite: productsData['isFavorite'],
+        ),
+      );
+      notifyListeners();
+    });
   }
 
   Future<void> addProduct(Product product) async {
