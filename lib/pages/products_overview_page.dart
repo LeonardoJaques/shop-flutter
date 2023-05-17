@@ -4,6 +4,7 @@ import 'package:shop_flutter/components/app_drawer.dart';
 import 'package:shop_flutter/components/badgeWidget.dart';
 import 'package:shop_flutter/components/product_grid.dart';
 import 'package:shop_flutter/models/cart.dart';
+import 'package:shop_flutter/models/product_list.dart';
 import 'package:shop_flutter/utils/app_route.dart';
 
 enum FilterOptions {
@@ -20,6 +21,14 @@ class ProductsOverviewPage extends StatefulWidget {
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _showFavoriteOnly = false;
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -10,7 +10,7 @@ import 'package:shop_flutter/models/products.dart';
 class ProductList with ChangeNotifier {
   final List<Product> _items = DUMMY_PRODUCTS;
 
-  final baseURL = Environment.FIREBASEAPI;
+  final _url = '${Environment.FIREBASEAPI}/products.json';
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -18,9 +18,14 @@ class ProductList with ChangeNotifier {
 
   int get itemsCount => _items.length;
 
+  Future<void> loadProducts() async {
+    final response = await http.get(Uri.parse(_url));
+    print(jsonDecode(response.body));
+  }
+
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('$baseURL/products.json'),
+      Uri.parse(_url),
       body: jsonEncode(
         {
           'name': product.name,
