@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop_flutter/models/environment.dart';
+import 'package:shop_flutter/utils/constants.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -19,7 +19,8 @@ class Product with ChangeNotifier {
     required this.imageUrl,
     this.isFavorite = false,
   });
-  final _url = '${Environment.FIREBASEAPI}/products';
+
+  final _url = Constants.PRODUCT_BASE_URL;
 
   void _toggleFavorite() {
     isFavorite = !isFavorite;
