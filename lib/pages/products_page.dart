@@ -7,6 +7,7 @@ import 'package:shop_flutter/utils/app_route.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
+
   Future<void> _refreshProducts(BuildContext context) async {
     Provider.of<ProductList>(context, listen: false).loadProducts();
   }
