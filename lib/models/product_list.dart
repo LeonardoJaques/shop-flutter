@@ -9,7 +9,7 @@ import 'package:shop_flutter/models/products.dart';
 class ProductList with ChangeNotifier {
   final List<Product> _items = [];
 
-  final _url = '${Environment.FIREBASEAPI}/products.json';
+  final _url = '${Environment.FIREBASEAPI}/products';
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -19,7 +19,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> loadProducts() async {
     _items.clear();
-    final response = await http.get(Uri.parse(_url));
+    final response = await http.get(Uri.parse('$_url.json'));
     if (response.body == 'null') {
       return;
     }
@@ -41,7 +41,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse(_url),
+      Uri.parse('$_url.json'),
       body: jsonEncode(
         {
           'name': product.name,
@@ -83,9 +83,22 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  Future<void> updateProduct(Product product) {
+  Future<void> updateProduct(Product product) async {
     int index = _items.indexWhere((prod) => prod.id == product.id);
+
     if (index >= 0) {
+      await http.patch(
+        Uri.parse('$_url/${product.id}.json'),
+        body: jsonEncode(
+          {
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'imageUrl': product.imageUrl,
+            'isFavorite': product.isFavorite,
+          },
+        ),
+      );
       _items[index] = product;
       notifyListeners();
     }
