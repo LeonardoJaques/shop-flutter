@@ -1,10 +1,9 @@
-// ignore_for_file: unused_element
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_flutter/models/product_list.dart';
 import 'package:shop_flutter/models/products.dart';
 
+//https://cdn.pixabay.com/photo/2016/05/24/07/01/champions-1411861_640.jpg
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key});
 
@@ -34,7 +33,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return isValidUrl && endsWith;
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) {
       return;
@@ -42,28 +41,29 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     _formKey.currentState?.save();
     setState(() => _isLoading = true);
-
-    Provider.of<ProductList>(context, listen: false)
-        .saveProduct(_formData)
-        .catchError((onError) {
-      return showDialog<void>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: const Text('Ocorreu um erro!'),
-                content: const Text(
-                    'Ocorreu um erro ao salvar o produto! Tente novamente mais tarde.'),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Fechar'))
-                ],
-              ));
-    }).then(
-      (value) {
-        setState(() => _isLoading = false);
+    try {
+      await Provider.of<ProductList>(context, listen: false)
+          .saveProduct(_formData);
+      if (context.mounted) {
         Navigator.of(context).pop();
-      },
-    );
+      }
+    } catch (onError) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Ocorreu um erro!'),
+          content: const Text(
+              'Ocorreu um erro ao salvar o produto! Tente novamente mais tarde.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Fechar'))
+          ],
+        ),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override

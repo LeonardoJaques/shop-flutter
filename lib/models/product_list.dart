@@ -19,7 +19,7 @@ class ProductList with ChangeNotifier {
   int get itemsCount => _items.length;
 
   Future<void> addProduct(Product product) async {
-    final future = http.post(
+    final response = await http.post(
       Uri.parse('$baseURL/products.json'),
       body: jsonEncode(
         {
@@ -31,20 +31,18 @@ class ProductList with ChangeNotifier {
         },
       ),
     );
-    return future.then((response) {
-      final id = jsonDecode(response.body)['name'];
-      _items.add(
-        Product(
-          id: id,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          isFavorite: product.isFavorite,
-        ),
-      );
-      notifyListeners();
-    });
+    final id = jsonDecode(response.body)['name'];
+    _items.add(
+      Product(
+        id: id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        isFavorite: product.isFavorite,
+      ),
+    );
+    notifyListeners();
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
