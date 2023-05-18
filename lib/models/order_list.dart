@@ -8,7 +8,7 @@ import 'package:shop_flutter/models/order.dart';
 import 'package:shop_flutter/utils/constants.dart';
 
 class OrderList with ChangeNotifier {
-  List<Order> _items = [];
+  final List<Order> _items = [];
   List<Order> get items {
     return [..._items];
   }

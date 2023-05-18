@@ -5,6 +5,7 @@ import 'package:shop_flutter/models/cart.dart';
 import 'package:shop_flutter/models/environment.dart';
 import 'package:shop_flutter/models/order_list.dart';
 import 'package:shop_flutter/models/product_list.dart';
+import 'package:shop_flutter/pages/auth_pages.dart';
 import 'package:shop_flutter/pages/cart_page.dart';
 import 'package:shop_flutter/pages/orders_page.dart';
 import 'package:shop_flutter/pages/product_form_page.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: {
+          AppRoutes.AUTH: (context) => const AuthPage(),
           AppRoutes.HOME: (context) => const ProductsOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (context) => const ProductDetailPage(),
           AppRoutes.PRODUCTS: (context) => const ProductsPage(),
