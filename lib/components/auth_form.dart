@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_flutter/models/auth.dart';
 
 enum AuthMode { signUp, login }
 
@@ -29,19 +31,25 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) {
       return;
     }
     setState(() => _isLoading = true);
     _formKey.currentState?.save();
+    Auth auth = Provider.of(context, listen: false);
+
     if (_isLogin()) {
       // Login
-    } else
-      (
-        // Registrar
+    } else {
+      // Registrar
+      await auth.signUp(
+        _authData['email']!,
+        _authData['password']!,
       );
+    }
+
     setState(() => _isLoading = false);
   }
 
@@ -67,7 +75,7 @@ class _AuthFormState extends State<AuthForm> {
                     fontSize: 20,
                   ),
                   keyboardType: TextInputType.emailAddress,
-                  onSaved: (email) => _authData['email'] ?? '',
+                  onSaved: (email) => _authData['email'] = email ?? '',
                   validator: (emailValue) {
                     final email = emailValue ?? '';
                     if (email.trim().isEmpty || !email.contains('@')) {
@@ -94,13 +102,17 @@ class _AuthFormState extends State<AuthForm> {
                           }
                           return null;
                         },
-                  onSaved: (password) => _authData['password'] ?? '',
+                  onSaved: (password) => _authData['password'] = password ?? '',
                 ),
                 if (_isSignUp())
                   TextFormField(
                     decoration:
                         const InputDecoration(labelText: 'Confirmar Senha'),
                     obscureText: true,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (passwordValue) {
                       final password = passwordValue ?? '';

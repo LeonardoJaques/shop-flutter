@@ -12,4 +12,8 @@ class Environment {
   static String get FIREBASEAPI {
     return dotenv.env['FIREBASE_URL'] ?? 'FIREBASE_URL not found';
   }
+
+  static String get FIREBASE_AUTH_KEY {
+    return dotenv.env['FIREBASE_AUTH_KEY'] ?? 'FIREBASE_AUTH_KEY not found';
+  }
 }
