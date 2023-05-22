@@ -4,13 +4,15 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_flutter/exception/http_exception.dart';
-import 'package:shop_flutter/models/environment.dart';
 import 'package:shop_flutter/models/products.dart';
+import 'package:shop_flutter/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
-  final List<Product> _items = [];
+  final String _token;
+  List<Product> _items = [];
+  ProductList(this._token, this._items);
 
-  final _url = '${Environment.FIREBASEAPI}/products';
+  final _url = Constants.PRODUCT_BASE_URL;
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -20,7 +22,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> loadProducts() async {
     _items.clear();
-    final response = await http.get(Uri.parse('$_url.json'));
+    final response = await http.get(Uri.parse('$_url.json?auth=$_token'));
     if (response.body == 'null') {
       return;
     }
@@ -42,7 +44,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('$_url.json'),
+      Uri.parse('$_url.json/?auth=$_token'),
       body: jsonEncode(
         {
           'name': product.name,
@@ -89,7 +91,7 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('$_url/${product.id}.json'),
+        Uri.parse('$_url/${product.id}.json?auth=$_token'),
         body: jsonEncode(
           {
             'name': product.name,
@@ -112,7 +114,8 @@ class ProductList with ChangeNotifier {
       final product = _items[index];
       _items.remove(product);
       notifyListeners();
-      final response = await http.delete(Uri.parse('$_url/${product.id}.json'));
+      final response =
+          await http.delete(Uri.parse('$_url/${product.id}.json?auth=$_token'));
 
       if (response.statusCode >= 400) {
         _items.insert(index, product);
