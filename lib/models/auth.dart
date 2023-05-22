@@ -8,7 +8,7 @@ import 'package:shop_flutter/utils/constants.dart';
 class Auth with ChangeNotifier {
   String? _token;
   String? _email;
-  String? _uId;
+  String? _userId;
   String? _expiryDate;
 
   bool get isAuth {
@@ -20,7 +20,7 @@ class Auth with ChangeNotifier {
 
   String? get token => isAuth ? _token : null;
   String? get email => isAuth ? _email : null;
-  String? get uId => isAuth ? _uId : null;
+  String? get userId => isAuth ? _userId : null;
 
   Future<void> _authenticate(
       String email, String password, String urlFragment) async {
@@ -44,7 +44,7 @@ class Auth with ChangeNotifier {
     } else {
       _token = body['idToken'];
       _email = body['email'];
-      _uId = body['localId'];
+      _userId = body['localId'];
       _expiryDate = DateTime.now()
           .add(Duration(seconds: int.parse(body['expiresIn'])))
           .toString();
