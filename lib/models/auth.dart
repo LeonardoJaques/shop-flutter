@@ -5,8 +5,12 @@ import 'package:http/http.dart' as http;
 import 'package:shop_flutter/utils/constants.dart';
 
 class Auth with ChangeNotifier {
-  static final url = Constants.FIREBASE_AUTH;
-  Future<void> signUp(String email, String password) async {
+  Future<void> _authenticate(
+      String email, String password, String urlFragment) async {
+    final url = urlFragment.contains('signUp')
+        ? Constants.FIREBASE_AUTH_SIGNUP
+        : Constants.FIREBASE_AUTH_SIGNINWITHPASSWORD;
+
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode(
@@ -19,4 +23,14 @@ class Auth with ChangeNotifier {
     );
     print(jsonDecode(response.body));
   }
+
+  Future<void> signUp(String email, String password) async {
+    return _authenticate(email, password, 'signUp');
+  }
+
+  Future<void> login(String email, String password) async {
+    return _authenticate(email, password, 'login');
+  }
 }
+//https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]
+//https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]
