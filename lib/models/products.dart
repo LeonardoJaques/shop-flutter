@@ -20,7 +20,7 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  final _url = Constants.PRODUCT_BASE_URL;
+  final _url = Constants.USER_FAVORITES;
 
   void _toggleFavorite() {
     isFavorite = !isFavorite;
