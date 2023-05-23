@@ -18,6 +18,7 @@ class ProductList with ChangeNotifier {
   ]);
 
   final _url = Constants.PRODUCT_BASE_URL;
+  final _userFavorites = Constants.USER_FAVORITES;
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
@@ -28,25 +29,27 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     _items.clear();
     final response = await http.get(Uri.parse('$_url.json?auth=$_token'));
-    if (response.body == 'null') {
-      return;
-    }
+    if (response.body == 'null') return;
 
     final favResponse = await http.get(
-      Uri.parse('${Constants.USER_FAVORITES}/$_userId.json?auth=$_token'),
+      Uri.parse('$_userFavorites/$_userId.json?auth=$_token'),
     );
+
     Map<String, dynamic> favData =
         favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
+
     Map<String, dynamic> data = jsonDecode(response.body);
-    data.forEach((productId, productsData) {
+
+    data.forEach((productId, productData) {
       final isFavorite = favData[productId] ?? false;
+
       _items.add(
         Product(
           id: productId,
-          name: productsData['name'],
-          description: productsData['description'],
-          price: productsData['price'],
-          imageUrl: productsData['imageUrl'],
+          name: productData['name'],
+          description: productData['description'],
+          price: productData['price'],
+          imageUrl: productData['imageUrl'],
           isFavorite: isFavorite,
         ),
       );
@@ -81,7 +84,6 @@ class ProductList with ChangeNotifier {
 
   Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null && data['id'].toString().isNotEmpty;
-
     final product = Product(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       name: data['name'] as String,
