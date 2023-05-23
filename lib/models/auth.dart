@@ -59,6 +59,12 @@ class Auth with ChangeNotifier {
   Future<void> login(String email, String password) async {
     return _authenticate(email, password, 'login');
   }
+
+  void logout() {
+    _token = null;
+    _email = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
+  }
 }
-//https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]
-//https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]
