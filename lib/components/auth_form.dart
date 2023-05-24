@@ -24,7 +24,6 @@ class _AuthFormState extends State<AuthForm>
   bool _isLoading = false;
 
   AnimationController? _controller;
-  Animation<Size>? _heightAnimation;
 
   @override
   void initState() {
@@ -33,13 +32,6 @@ class _AuthFormState extends State<AuthForm>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _heightAnimation = Tween<Size>(
-      begin: const Size(double.infinity, 310),
-      end: const Size(double.infinity, 400),
-    ).animate(CurvedAnimation(
-      parent: _controller!,
-      curve: Curves.linear,
-    ));
   }
 
   @override
@@ -116,14 +108,12 @@ class _AuthFormState extends State<AuthForm>
       elevation: 8.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(20),
-      child: AnimatedBuilder(
-        animation: _heightAnimation!,
-        builder: (ctx, childForm) => Container(
-          padding: const EdgeInsets.all(16),
-          height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
-          width: deviceSize.width * 0.75,
-          child: childForm,
-        ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+        padding: const EdgeInsets.all(16),
+        height: _isLogin() ? 310 : 400,
+        width: deviceSize.width * 0.75,
         child: Form(
           key: _formKey,
           child: Column(
