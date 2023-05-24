@@ -20,10 +20,10 @@ class _AuthFormState extends State<AuthForm>
 
   AuthMode _authMode = AuthMode.login;
   bool _isLogin() => _authMode == AuthMode.login;
-  bool _isSignUp() => _authMode == AuthMode.signUp;
   bool _isLoading = false;
 
   AnimationController? _controller;
+  Animation<double>? _opacityAnimation;
 
   @override
   void initState() {
@@ -31,6 +31,15 @@ class _AuthFormState extends State<AuthForm>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
+    );
+    _opacityAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Curves.easeIn,
+      ),
     );
   }
 
@@ -43,12 +52,12 @@ class _AuthFormState extends State<AuthForm>
   void _switchAuthMode() {
     setState(
       () {
-        if (_isSignUp()) {
-          _authMode = AuthMode.login;
-          _controller?.reverse();
-        } else {
+        if (_isLogin()) {
           _authMode = AuthMode.signUp;
           _controller?.forward();
+        } else {
+          _authMode = AuthMode.login;
+          _controller?.reverse();
         }
       },
     );
@@ -154,24 +163,34 @@ class _AuthFormState extends State<AuthForm>
                       },
                 onSaved: (password) => _authData['password'] = password ?? '',
               ),
-              if (_isSignUp())
-                TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Confirmar Senha'),
-                  obscureText: true,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (passwordValue) {
-                    final password = passwordValue ?? '';
-                    if (password != _passwordController.text) {
-                      return 'Senhas são diferentes';
-                    }
-                    return null;
-                  },
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.linear,
+                constraints: BoxConstraints(
+                  minHeight: _isLogin() ? 0 : 60,
+                  maxHeight: _isLogin() ? 0 : 111,
                 ),
+                child: FadeTransition(
+                  opacity: _opacityAnimation!,
+                  child: TextFormField(
+                    decoration:
+                        const InputDecoration(labelText: 'Confirmar Senha'),
+                    obscureText: true,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (passwordValue) {
+                      final password = passwordValue ?? '';
+                      if (password != _passwordController.text) {
+                        return 'Senhas são diferentes';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               _isLoading
                   ? const CircularProgressIndicator()
@@ -193,7 +212,7 @@ class _AuthFormState extends State<AuthForm>
               const Spacer(),
               TextButton(
                 onPressed: _switchAuthMode,
-                child: Text(_isSignUp() ? 'Já possui conta?' : 'Criar conta'),
+                child: Text(_isLogin() ? 'Criar conta' : 'Já possui conta?'),
               ),
             ],
           ),
