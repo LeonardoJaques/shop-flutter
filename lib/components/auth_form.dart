@@ -24,6 +24,7 @@ class _AuthFormState extends State<AuthForm>
 
   AnimationController? _controller;
   Animation<double>? _opacityAnimation;
+  Animation<Offset>? _slideAnimation;
 
   @override
   void initState() {
@@ -38,7 +39,16 @@ class _AuthFormState extends State<AuthForm>
     ).animate(
       CurvedAnimation(
         parent: _controller!,
-        curve: Curves.easeIn,
+        curve: Curves.linear,
+      ),
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -1.5),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Curves.linear,
       ),
     );
   }
@@ -172,22 +182,25 @@ class _AuthFormState extends State<AuthForm>
                 ),
                 child: FadeTransition(
                   opacity: _opacityAnimation!,
-                  child: TextFormField(
-                    decoration:
-                        const InputDecoration(labelText: 'Confirmar Senha'),
-                    obscureText: true,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
+                  child: SlideTransition(
+                    position: _slideAnimation!,
+                    child: TextFormField(
+                      decoration:
+                          const InputDecoration(labelText: 'Confirmar Senha'),
+                      obscureText: true,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (passwordValue) {
+                        final password = passwordValue ?? '';
+                        if (password != _passwordController.text) {
+                          return 'Senhas são diferentes';
+                        }
+                        return null;
+                      },
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (passwordValue) {
-                      final password = passwordValue ?? '';
-                      if (password != _passwordController.text) {
-                        return 'Senhas são diferentes';
-                      }
-                      return null;
-                    },
                   ),
                 ),
               ),
