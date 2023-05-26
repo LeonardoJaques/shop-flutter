@@ -13,6 +13,7 @@ import 'package:shop_flutter/pages/product_form_page.dart';
 import 'package:shop_flutter/pages/products_detail_page.dart';
 import 'package:shop_flutter/pages/products_page.dart';
 import 'package:shop_flutter/utils/app_route.dart';
+import 'package:shop_flutter/utils/custom_route.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: Environment.fileName);
@@ -57,6 +58,10 @@ class MyApp extends StatelessWidget {
         title: 'Flutter shop',
         theme: ThemeData(
           fontFamily: 'Lato',
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.android: CustomPageTransitionBuilder(),
+            TargetPlatform.iOS: CustomPageTransitionBuilder(),
+          }),
           colorScheme: ColorScheme.fromSwatch().copyWith(
             secondary: Colors.deepOrange,
             primary: Colors.purple,
