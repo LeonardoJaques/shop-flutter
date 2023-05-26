@@ -81,11 +81,10 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> tryAutoLogin() async {
-    final userData = await Store.getMap('userData');
-    final expiryDate = DateTime.parse(userData['expiryDate']);
-
     if (isAuth) return;
+    final userData = await Store.getMap('userData');
     if (userData.isEmpty) return;
+    final expiryDate = DateTime.parse(userData['expiryDate']);
     if (expiryDate.isBefore(DateTime.now())) return;
 
     _token = userData['token'];
